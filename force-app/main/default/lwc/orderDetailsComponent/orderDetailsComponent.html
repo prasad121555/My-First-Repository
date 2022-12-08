@@ -1,0 +1,43 @@
+<template>
+    <div class="slds-is-relative">
+        <div>
+            <template if:true={orderSpinner}>
+                <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+            </template>
+        </div>
+        <lightning-quick-action-panel header="Search Shipments">
+            <lightning-input value={value} style="margin-left : 10px;margin-right : 10px;" type="text" onchange={handleChange} label = "Enter Invoice Number"></lightning-input>
+<br/>
+                <template if:true={showTable}>
+                    <lightning-datatable
+                                    key-field="id"
+                                    data={data}
+                                    columns={columns}
+                                    onrowaction={handleRowDeletion}>     
+                    </lightning-datatable>
+                </template>
+                <lightning-layout slot="footer" class="slds-align_absolute-center">
+                    <lightning-layout-item class="slds-m-right_small">
+                        <lightning-button label="First" icon-name="utility:jump_to_left" onclick={firstHandler} disabled={isFirst}></lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item>
+                        <lightning-button label="Previous" icon-name="utility:chevronleft" onclick={previousHandler} disabled={isPrev}></lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-m-left_medium">
+                        <select style = "width: 100px;" class="slds-select" name = "optionSelect" onchange={changeHandler} disabled={isData}>
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select> 
+                    </lightning-layout-item>    
+                    <lightning-layout-item class="slds-m-left_medium">
+                        <lightning-button label="Next" icon-name="utility:chevronright" icon-position="right" onclick={nextHandler} disabled={isNext}></lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-m-left_small">
+                        <lightning-button label="Last" icon-name="utility:jump_to_right" icon-position="right" onclick={lastHandler} disabled={isLast}></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+        </lightning-quick-action-panel>
+    </div>
+</template>

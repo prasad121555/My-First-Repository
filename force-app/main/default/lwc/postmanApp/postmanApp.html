@@ -1,0 +1,155 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="parentDiv">
+        <div class="innerDiv">
+            <lightning-combobox onchange={handleUrlChange} 
+                                name="combobox" 
+                                class="combo"
+                                options={options}
+                                value={method}
+                                variant="label-hidden">
+            </lightning-combobox>
+            <lightning-input variant="label-hidden" onchange={handleUrlChange} value={url} name="inputBox" placeholder="Enter URL" class="input"></lightning-input>
+            <lightning-button variant="brand" label="Send" class="send" onclick={handleClick} name="send"></lightning-button>
+            <lightning-button variant="brand" label="Save" class="save" onclick={handleClick} name="save"></lightning-button>
+        </div>
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="Params" onactive={handleActiveTab}>
+                <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+                    <thead>
+                    <tr>
+                        <th scope="col" height="22" style="width: 3rem">Sr.No.</th>
+                        <th scope="col" height="22">Key</th>
+                        <th scope="col" height="22">Value</th>
+                        <th scope="col" height="22" style="width: 3rem"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template for:each={listOfParams} for:item="rec">
+                        <tr key={rec} class="slds-hint-parent">
+                            <td style="font-weight: bold">
+                                <lightning-formatted-number value={rec.index}></lightning-formatted-number>.
+                            </td>
+        
+                            <td>
+                                <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Key" value={rec.Key} onchange={handleInputChange}></lightning-input>
+                            </td>
+        
+                            <td>
+                                <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Value" value={rec.Value} onchange={handleInputChange}></lightning-input>
+                            </td>
+        
+                            <td>
+                                <lightning-button-icon icon-name="utility:delete" alternative-text="Remove" title="Remove" name={rec.index} onclick={removeRow}></lightning-button-icon>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+                <div class="slds-p-left_small slds-p-vertical_small">
+                    <lightning-button variant="neutral" label="Add Row" title="Add Row" icon-name="utility:add" onclick={addNewRow}></lightning-button>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Authorization">
+                <div class="displayInOneLine">
+                    <lightning-combobox onchange={handleChange} 
+                                name="authIn1" 
+                                class="combo"
+                                options={options1}
+                                value={authIn1}
+                                variant="label-hidden">
+            </lightning-combobox>
+                    <lightning-input if:true={isBearer} placeholder="Token" variant="label-hidden" onchange={handleChange} value={authIn2} name="authIn2" class="inputFlex"></lightning-input><br/>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Headers" onactive={handleActiveTab}>
+                <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+                    <thead>
+                    <tr>
+                        <th scope="col" height="22" style="width: 3rem">Sr.No.</th>
+                        <th scope="col" height="22">Key</th>
+                        <th scope="col" height="22">Value</th>
+                        <th scope="col" height="22" style="width: 3rem"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template for:each={listOfHeaders} for:item="rec">
+                        <tr key={rec} class="slds-hint-parent">
+                            <td style="font-weight: bold">
+                                <lightning-formatted-number value={rec.index}></lightning-formatted-number>.
+                            </td>
+        
+                            <td>
+                                <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Key" value={rec.Key} onchange={handleInputChange}></lightning-input>
+                            </td>
+        
+                            <td>
+                                <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Value" value={rec.Value} onchange={handleInputChange}></lightning-input>
+                            </td>
+        
+                            <td>
+                                <lightning-button-icon icon-name="utility:delete" alternative-text="Remove" title="Remove" name={rec.index} onclick={removeRow}></lightning-button-icon>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+                <div class="slds-p-left_small slds-p-vertical_small">
+                    <lightning-button variant="neutral" label="Add Row" title="Add Row" icon-name="utility:add" onclick={addNewRow}></lightning-button>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Body" onactive={handleActiveTab}>
+                <div style="display: flex;">
+                    <lightning-input type="checkbox" onchange={handleCheckboxChange} checked={checkedFirst} label="none"></lightning-input>
+                    <lightning-input type="checkbox" onchange={handleCheckboxChange} checked={checkedSecond} label="form-data"></lightning-input>
+                    <lightning-input type="checkbox" onchange={handleCheckboxChange} checked={checkedThird} label="x-www-form-urlencoded"></lightning-input>
+                    <lightning-input type="checkbox" onchange={handleCheckboxChange} checked={checkedLast} label="raw"></lightning-input>
+                </div>
+                <div if:true={isRaw}>
+                    <lightning-textarea onchange={handleJsonBody} variant="label-hidden" class="textarea" value={jsonBody}></lightning-textarea>
+                </div>
+                <div if:true={isVisible}>
+                    <br/>
+                    <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+                        <thead>
+                        <tr>
+                            <th scope="col" height="22" style="width: 3rem">Sr.No.</th>
+                            <th scope="col" height="22">Key</th>
+                            <th scope="col" height="22">Value</th>
+                            <th scope="col" height="22" style="width: 3rem"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template for:each={listOfBody} for:item="rec">
+                            <tr key={rec} class="slds-hint-parent">
+                                <td style="font-weight: bold">
+                                    <lightning-formatted-number value={rec.index}></lightning-formatted-number>.
+                                </td>
+            
+                                <td>
+                                    <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Key" value={rec.Key} onchange={handleInputChange}></lightning-input>
+                                </td>
+            
+                                <td>
+                                    <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Value" value={rec.Value} onchange={handleInputChange}></lightning-input>
+                                </td>
+            
+                                <td>
+                                    <lightning-button-icon icon-name="utility:delete" alternative-text="Remove" title="Remove" name={rec.index} onclick={removeRow}></lightning-button-icon>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                    <div class="slds-p-left_small slds-p-vertical_small">
+                        <lightning-button variant="neutral" label="Add Row" title="Add Row" icon-name="utility:add" onclick={addNewRow}></lightning-button>
+                    </div>
+                    <br/>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+        <br/>
+        <legend>Response</legend>
+        <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
+    </div>
+</template>

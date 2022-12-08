@@ -1,0 +1,159 @@
+<template>
+    <div if:true={show200} class="slds-is-relative" >
+        <template if:true={addSpinner}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+        </template>
+        <header class="slds-border_bottom">
+            <div style="text-align:center; padding-top: 15px; padding-bottom: 15px;">
+                <h2 style=" text-align: center; font-family:Segoe UI;font-size:20px; font-weight: 400;">Reward History</h2>
+                <lable style=" text-align: center; font-family:Segoe UI; font-size:14px;">(Balance Points: {totalPoints})</lable>
+            </div>
+        </header>
+
+            <div  class="slds-grid slds-wrap " style="margin-top:10px; padding-left: 10px; text-align: left; font-family:Segoe UI; font-size:16px; font-weight: 400; background-color: lightgray; ">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12">
+                    <lightning-formatted-text class="slds-col" value="Account Name :" ></lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12">
+                    <lightning-formatted-text class="slds-col" value={accName} ></lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12">
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12">
+                    <lightning-formatted-text class="slds-col" value="Email :" ></lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12">
+                    <lightning-formatted-text class="slds-col" value={accEmail} ></lightning-formatted-text>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12">
+                </div>
+            </div>
+
+            
+            <div style="padding-top: 20px; padding-left: 10px; padding-right: 10px;">
+                <lightning-datatable
+                    key-field="id"
+                    data={rewardPointsList}
+                    columns={columns}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+                <!-- <div class="slds-scrollable_x" style="text-align: center; margin-left: 10px; margin-right: 10px;">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-border_right slds-border_left">
+                        <thead>
+                            <tr>
+                                <th style="width:50px ;" title="Point Changes">Point Changes</th>
+                                <th style="width:75px ;" title="Date">Date</th>
+                                <th title="Description">Description</th>
+                                <th title="Note">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="-169" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-16, 10:33 am" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Refund adjustment" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="356" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-15, 11:33 pm" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Placed an order" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="-990" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-15, 9:13 pm" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Points spent on ₹99 off coupon" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="998" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-15, 6:33 pm" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Manual adjustment" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="-1000" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-15, 3:03 pm" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Points spent on ₹100 off coupon" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50px ;text-align: right;">
+                                        <lightning-formatted-number value="1000" ></lightning-formatted-number>
+                                    </td>
+                                    <td style="width:75px ;">
+                                        <lightning-formatted-text value="2022-09-15, 11:10 am" ></lightning-formatted-text>
+                                    </td>
+                                    <td>
+                                        <lightning-formatted-text value="Manual adjustment" ></lightning-formatted-text>
+                                    </td>
+                                    <td >
+                                        <lightning-formatted-text value="Test" ></lightning-formatted-text>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+            </div>
+        </br></br>
+            <footer style="background-color: #f3f2f2;padding-right: 10px;">
+                <lightning-button class="slds-float_right" variant="neutral" label="Cancel" onclick={closeAction}></lightning-button>
+            </footer>
+        </br></br></br>
+    </div>
+
+    <div if:true={show401} class="slds-is-relative" style="height: 200px; text-align: center;" >
+                    <h2  class="slds-text-heading_medium slds-hyphenate" style="padding-top: 75px; font-weight: 500;">Authorization Failed - X-Api-Key or End Point url Incorrect</h2>
+    </div>
+
+    <div if:true={show500} class="slds-is-relative" style="height: 200px; text-align: center;">
+        <h2  class="slds-text-heading_medium slds-hyphenate " style="padding-top: 75px; font-weight: 500;">Reward points history not available</h2>
+    </div>
+
+    <div if:true={showOther} class="slds-is-relative" style="height: 200px; text-align: center;">
+        <h2  class="slds-text-heading_medium slds-hyphenate" style="padding-top: 75px; font-weight: 500;">Reward points history not found</h2>
+    </div>
+
+
+</template>

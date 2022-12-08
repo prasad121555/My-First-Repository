@@ -1,0 +1,17 @@
+.division{
+    overflow: auto;
+}
+.redColor{
+    background-color: red !important;
+}
+.blackColor{
+    color: black;
+}
+.slds-table thead th{
+    background-color: navy;
+    color: white;
+}
+.slds-table,tbody td{
+    background-color: khaki;
+    border-color: black;
+}

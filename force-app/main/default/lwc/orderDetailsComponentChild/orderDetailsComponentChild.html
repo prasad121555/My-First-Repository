@@ -1,0 +1,25 @@
+<template>
+<div class="slds-is-relative">
+    <div>
+        <template if:true={orderSpinner}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+        </template>
+    </div>
+
+    <lightning-quick-action-panel header="Search Shipments">
+        <lightning-input value={value} style="margin-left : 10px;margin-right : 10px;" type="text" onchange={handleChange} label = "Enter Invoice Number"></lightning-input>
+<br/> 
+        
+            <template if:true={showTable}>
+                <lightning-datatable
+                                key-field="id"
+                                data={data}
+                                columns={columns}>     
+                </lightning-datatable>
+            </template>
+            <br/>
+                <c-order-details-component onprevious={previousHandler2} onnext={nextHandler2} onselected={changeHandler2} onfirstpage={firstpagehandler} onlastpage={lastpagehandler}></c-order-details-component>
+    </lightning-quick-action-panel>
+</div>
+
+</template>

@@ -1,0 +1,47 @@
+<template>
+    <div if:true={is_multiple}>
+        
+        <template for:each={selectedRecords} 
+        for:item="rec"
+         for:index="index"
+         class=" slds-p-left_medium">
+            <div key={rec.recId} style="margin-top:18px ;" class="slds-p-left_xx-small">
+                <lightning-pill  label={rec.recName} data-val={index} data-id={rec.recId}
+                    onremove={removeHandler}>
+                    <lightning-icon  icon-name="standard:product_item" variant="circle"></lightning-icon>
+                </lightning-pill>
+            </div>
+        </template>
+    </div>
+
+    <div if:true={showInput}>
+    <lightning-input type="text" label={nm} value={value} id="searchinput" data-val="searchinput"
+         placeholder=" Search Customer name"
+        onclick={searchField} onchange={searchField} onfocusout={focusOut_event}>
+    </lightning-input>
+    </div>
+    <div if:true={flag}>
+        <div class="dropdownb dropdown slds-scrollable">
+            <div onmouseleave={mouseOut} onmouseenter={mouseIn}>
+                <ul style="background-color: #F2FAFC;">
+                    <template if:true={searchRecords} for:each={searchRecords} for:item="record">
+                        <li role="presentation" class="slds-listbox__item " key={record.recId}>
+                            <div data-val={record.recId} data-name={record.recName} onclick={setSelectedrecord}
+                                class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta slds-p-top_medium slds-p-left_small slds-p-bottom_small"
+                                role="option">
+
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="custom:custom15" class="slds-icon slds-icon_small"
+                                        size="small" alternative-text="icon"></lightning-icon>
+                                </div>
+                                {record.recName}
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    
+</template>

@@ -1,0 +1,42 @@
+<template>
+
+    <div class="slds-card" style="font-family: 'Open Sans', sans-serif">
+
+        <!-- Table -->
+        <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+            <thead>
+            <tr>
+                <th scope="col" height="22" style="width: 3rem">Sr.No.</th>
+                <th scope="col" height="22">Key</th>
+                <th scope="col" height="22">Value</th>
+                <th scope="col" height="22" style="width: 3rem"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <template for:each={listOfAccounts} for:item="rec">
+                <tr key={rec} class="slds-hint-parent">
+                    <td style="font-weight: bold">
+                        <lightning-formatted-number value={rec.index}></lightning-formatted-number>.
+                    </td>
+
+                    <td>
+                        <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Key" value={rec.Key} onchange={handleInputChange}></lightning-input>
+                    </td>
+
+                    <td>
+                        <lightning-input type="text" variant="label-hidden" data-id={rec.index} name="Value" value={rec.Value} onchange={handleInputChange}></lightning-input>
+                    </td>
+
+                    <td>
+                        <lightning-button-icon icon-name="utility:delete" alternative-text="Remove" title="Remove" name={rec.index} onclick={removeRow}></lightning-button-icon>
+                    </td>
+                </tr>
+            </template>
+            </tbody>
+        </table>
+        <div class="slds-p-left_small slds-p-vertical_small">
+            <lightning-button variant="neutral" label="Add Row" title="Add Row" icon-name="utility:add" onclick={addNewRow}></lightning-button>
+        </div>
+    </div>
+
+</template>

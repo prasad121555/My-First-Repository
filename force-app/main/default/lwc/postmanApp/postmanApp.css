@@ -1,0 +1,51 @@
+.innerDiv{
+    font-weight: bold;
+    display:flex;
+    padding: 15px 0px 15px 0px;
+}
+.parentDiv{
+    background-color: rgb(48, 48, 48);
+    padding: 0px 15px 15px 15px;
+}
+.combo{
+    width: 200px;
+}
+.input{
+    width: 100%;
+} 
+.combo,.input{
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+}
+.send,.save{
+    margin-left: 15px;
+    border: none;
+    border-radius: 5px;;
+    font-size: 15px;
+}
+.save{
+    flex: 4;
+}
+.minHeight{
+    height: fit-content;
+}
+.maxHeight{
+    height: 300px;
+}
+.displayInOneLine{
+    display: flex;
+}
+.inputFlex{
+    flex: 2;
+}
+legend{
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(184, 184, 184);
+    margin-bottom: 5px;
+}
+.textarea{
+    padding-top: 15px;
+}

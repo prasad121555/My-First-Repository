@@ -1,0 +1,64 @@
+<template>
+    <lightning-card>
+        <div>
+            <template if:true={accSpinner}>
+                <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+            </template>
+        </div>
+        <lightning-layout>
+            <lightning-layout-item class="slds-p-left_medium slds-p-right_medium">
+                <lightning-combobox name="Month" 
+                                    label="Month" 
+                                    value={selectedMonths}
+                                    options={optionsM} 
+                                    onchange={handleMonth} >
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <lightning-combobox name="Year" 
+                                    label="Year" 
+                                    value={selectedYear}
+                                    options={optionsY} 
+                                    onchange={handleYear}>
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+        <br/>
+        <div if:true={flagt} class="division slds-p-around_medium">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-border_right slds-border_left">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">
+                            <div title="Account Name">Account Name</div>
+                        </th>
+                        <template for:each={daysInMonth} for:item="day">
+                            <th key={day.key} scope="col" class={day.css}>{day.value}</th>
+                        </template>
+                        <th if:true={show29} class={color29} scope="col">29</th>
+                        <th if:true={show30} class={color30} scope="col">30</th>
+                        <th if:true={show31} class={color31} scope="col">31</th>
+                        <th title="Total Meetings" scope="col">Total Meetings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={outerMap} for:item="mapKey">
+                        <tr key={mapKey.key}>
+                            <td>
+                                <div title={mapKey.key}>{mapKey.key}</div>
+                            </td>
+                            <template for:each={mapKey.value} for:item="innerMap">
+                                <td key={innerMap.key}>
+                                {innerMap.value}
+                                </td>
+                            </template>
+                            <td>
+                                {mapKey.total}
+                            </td>
+                        </tr>
+                    </template>
+                    
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+</template>

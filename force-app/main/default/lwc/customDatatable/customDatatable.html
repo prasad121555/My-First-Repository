@@ -1,0 +1,26 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card title="Create Record">
+    <div class="slds-is-relative">
+        <lightning-input name="Invoice" onchange={handleChange} style="margin-left : 10px;margin-right : 10px;" type="text" label = "Invoice Number" required="true"></lightning-input><br/>
+        <lightning-input name="ShipDate" onchange={handleChange} style="margin-left : 10px;margin-right : 10px;" type="date" label = "Shipping Date" required="true"></lightning-input><br/>
+        <lightning-input name="ShipAddr" onchange={handleChange} style="margin-left : 10px;margin-right : 10px;" type="text" label = "Shipping address" required="true"></lightning-input><br/>
+        <lightning-input name="Quantity" onchange={handleChange} style="margin-left : 10px;margin-right : 10px;" type="text" label = "Quantity" required="true"></lightning-input><br/>
+        <div slot = "footer" class="slds-align_absolute-center">
+            <lightning-button variant="brand" label="Add" onclick={handleAdd} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="neutral" label="Clear" onclick={handleClear} class="slds-m-left_x-small"></lightning-button>
+        </div>
+        <br/>
+        <template if:true={showTable}>
+            <lightning-datatable 
+                             class="slds-p-left_small"
+                             key-field="Id"
+                             data={data}
+                             columns={columns}
+                             onrowaction={handleAction}
+                             hide-checkbox-column="true">
+            </lightning-datatable>
+        </template>
+    </div>
+</lightning-card>
+</template>

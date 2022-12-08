@@ -1,0 +1,110 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-is-relative">
+    
+    <lightning-quick-action-panel header="Add Visit Report">
+       
+      <div class="slds-form-element">              
+
+        <lightning-input onchange={handleChange}  type="date" name="Input1" label="Visit Date" value={VisitDate} required ></lightning-input>
+        
+        <div style="margin-top:8px"> 
+          <span style="color:red">*</span><span style="font-size:12px">Distributor/Dealer Name</span>
+        <c-lookupcmp  multiselect=false sobject='Account'
+        fieldname='Name,Name_Mobile__c' displayfield='Name' filter={filter} onselected={handleAccountSelected}
+        onremove={handleRemoveAccount} singleselectedrec={AccountName} 
+        ></c-lookupcmp>   
+        </div>
+
+        <lightning-textarea onchange={handleChange} type="text" name="Input3" label="Problem Reported/ Feedback" value={Feedback}  required></lightning-textarea>
+
+        <lightning-textarea onchange={handleChange} type="text" name="Input4" label="Remarks / Resolution" value={Remarks} required></lightning-textarea>
+        <lightning-input onchange={handleChange} type="date" name="Input5" label="Tentative Time of Closure" value={DOC} required></lightning-input>
+       
+  <!--      <lightning-textarea name="input3" label="Close Comments" value={Comments} onchange={handleCommentChange} placeholder=""></lightning-textarea>
+--></div> 
+<div style="margin-top:15px">
+<lightning-button variant="brand" label="Add" onclick={handleAdd} class="slds-m-left_x-small" disabled={AddButtonDisableFlag}></lightning-button>
+</div>  
+
+<div if:true={showData} style="margin-top:15px">
+    <h2><b>Details:</b></h2>
+    </br>
+
+   <lightning-datatable
+    key-field="Id"
+    data={data}
+    hide-checkbox-column="true"
+    columns={columns}
+    onrowaction={handleRowAction}>
+</lightning-datatable>
+ 
+
+<!-- <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+  <thead>
+      <tr class="slds-text-title_caps">
+          <th scope="col">
+              <div class="slds-truncate" title="Visit Date">Visit Date</div>
+          </th>
+          <th scope="col">
+              <div class="slds-truncate" title="Distributor/Dealer Name">Distributor/Dealer Name</div>
+          </th>
+          <th scope="col">
+              <div class="slds-truncate" title="Problem Reported/ Feedback">Problem Reported/ Feedback</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Remarks / Resolution">Remarks / Resolution</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate" title="Tentative Time of Closure">Tentative Time of Closure</div>
+      </th>
+          <th scope="col">
+              <div class="slds-truncate" title="Action">Action</div>
+          </th>
+      </tr>
+  </thead>   
+  <tbody>      
+      
+      <template for:each={data} for:item="data" for:index="index">
+          <tr key={data.Id}>                                                
+              <td>
+               {data.Visit_Date}                               
+              </td>
+              <td>
+                 {data.Distributor_Dealer_Name}                        
+              </td>
+              <td>
+                {data.Problem_Reported_Feedback} 
+              </td>
+              <td>
+              {data.Remarks_Resolution} 
+            </td>
+            <td>
+             {data.Tentative_Time_of_Closure} 
+          </td>
+          <td>
+            <lightning-button-icon icon-name="utility:delete"
+                  data-id={indx}       
+                  alternative-text="Delete"     
+                  class="slds-m-left_xx-small"
+                  onclick={removeRow} 
+                  title="Delete"></lightning-button-icon>
+        </td>
+          </tr>
+      </template>
+       
+  </tbody>
+</table> -->
+
+</div>
+  
+      <div slot="footer">
+        <lightning-button variant="neutral" label="Cancel" onclick={closeAction}></lightning-button>
+        <lightning-button variant="brand" label="Submit For Approval" onclick={handleSave} class="slds-m-left_x-small" disabled={saveButtonDisableFlag}></lightning-button>
+      </div>
+ 
+    </lightning-quick-action-panel>
+
+</div>
+
+  </template>

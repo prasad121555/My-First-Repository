@@ -1,0 +1,384 @@
+<template>
+  <!-- <lightning-title>Product Order Information</lightning-title> -->
+<lightning-card>
+<!-- <h1 style="font-weight: bolder;font-size:larger;text-align:center">Product Order Page</h1>    -->
+
+
+<div class="slds-page-header">
+<div class="slds-media__body">
+  <div class="slds-page-header__name">
+    <div class="slds-page-header__name-title"  >
+      
+      <h1  class="slds-text-align_center" style="Font: size 2px;">
+        <span class="slds-page-header__title slds-truncate"  title="Product Information" >Product Information</span>
+      </h1>
+      
+    </div>
+  </div>
+  </div>
+  </div>
+<br>
+
+<lightning-layout>
+
+<!-- 1st line layout start -->
+
+
+<!-- customer name -->
+
+<lightning-layout-item flexibility="auto" style="margin-left : 10px;margin-right : 10px;"  padding="horizontal-medium">  
+  <c-look-up
+  multiselect=false 
+  nm="Customer Name"
+  sobject='Account' 
+  fieldname='Name' 
+  onselected={handleSelect} 
+  onremovehandler={handleremove}
+  value={accValue}>
+  </c-look-up>
+
+  
+</lightning-layout-item>
+
+</lightning-layout>
+
+<!-- 1st line layout stop -->
+
+<!-- 2nd line layout start --> 
+
+
+      <lightning-layout>
+      <lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+          <lightning-combobox
+          name="Depot"
+          label="Sales Depot"
+          value={value}
+          placeholder="Select Depot"
+          style="margin-left : 10px;margin-right : 10px;" 
+          options={options}
+          onchange={handleChange} >
+        </lightning-combobox>
+          </lightning-layout-item>
+
+<!-- Order Date -->
+
+      <lightning-layout-item flexibility="auto" padding="horizontal-small">  
+      <lightning-input
+      type="date"
+      style="margin-left : 10px;margin-right : 10px;" 
+      label="Order Date"
+      formatter="Date"
+      value={OrderDate}
+      onchange={handleChange} >
+      </lightning-input>
+      </lightning-layout-item>
+      </lightning-layout>
+
+<!-- 2nd line layout stop -->
+
+<!-- 3rd line layout stop -->
+
+ <!-- Select Products -->
+
+      <lightning-layout>
+      <lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+          <c-look-up
+          multiselect=false 
+          sobject='Product2'
+          nm="Product Name" 
+          value={value}
+          fieldname='Name' 
+          onselected={handleSelect} 
+          onremovehandler={handleremove}>
+          </c-look-up>
+      
+          
+      </lightning-layout-item>
+
+<!-- Quantity -->
+
+<lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+<lightning-input 
+name="Quantity" 
+onchange={handleChange} 
+style="margin-left : 10px;margin-right : 10px;" 
+type="number" 
+label = "Quantity"
+value={quant}
+ required="true"></lightning-input>
+</lightning-layout-item>
+</lightning-layout>
+
+<!-- 4th line layout start -->
+
+<!-- Price -->
+
+<lightning-layout>
+  <lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+    <lightning-input 
+    name="Price" 
+    onchange={handleChange} 
+    style="margin-left : 10px;margin-right : 10px;" 
+    type="number" 
+    label = "Price"
+     value={price}
+     disabled="true">
+    </lightning-input>
+  </lightning-layout-item>
+
+
+<lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+
+<lightning-input name="SubTotal" 
+  onchange={handleChange}
+  style="margin-left : 10px;margin-right : 10px;"
+  type="number"
+  label = "Subtotal"
+  required="true"
+  disabled
+  value={st}
+    >
+</lightning-input>
+
+</lightning-layout-item>
+</lightning-layout>
+
+<!-- 4th line layout stop -->
+
+<!-- 5th line layout start -->
+
+<lightning-layout>
+
+  <lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+    <lightning-combobox
+    name="Discount Range"
+    label="Discount Range"
+    value={value}
+    placeholder="Select Discount Range"
+    style="margin-left : 10px;margin-right : 10px;" 
+    options={Ranges}
+    onchange={DiscountRange} >
+  </lightning-combobox>
+</lightning-layout-item>
+<lightning-layout-item flexibility="auto" padding="horizontal-medium">  
+<lightning-input
+type="percentage"
+label="Discount"
+value={Disount}
+onchange={Discount} >
+</lightning-input>
+
+</lightning-layout-item>
+</lightning-layout><br><br>
+
+  <!-- Address  Information-->
+
+  <div class="slds-page-header">
+    <div class="slds-media__body">
+      <div class="slds-page-header__name">
+        <div class="slds-page-header__name-title"  >
+          
+          <h1  class="slds-text-align_center">
+            <span class="slds-page-header__title slds-truncate"  title="Address Information" >Address Information</span>
+          </h1>
+          
+        </div>
+      </div>
+      </div>
+      </div>
+      <br>
+
+      <lightning-layout>
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="6">
+        <h1 style="font-weight: bold;margin-left : 18px;">Billing Address</h1>
+        </lightning-layout-item> <br><br>
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="6">
+        <h1 style="font-weight: bold;margin-left : 10px;">Shipping Address</h1>
+        </lightning-layout-item>
+        </lightning-layout>
+        <br>
+        <!-- Billing Address -->
+        
+        <lightning-layout>
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="6">
+        <lightning-textarea
+        name="Billing Street"
+        label="Billing Street"
+        style="margin-left : 10px;margin-right : 10px;"
+        required="true"
+        value={bStreet}
+        disabled
+        >
+        </lightning-textarea>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="6">
+        <lightning-textarea
+        name="Shipping Street"
+        label="Shipping Street"
+        style="margin-left : 10px;margin-right : 10px;"
+        required="true"
+        value={sStreet}>
+        </lightning-textarea>
+        </lightning-layout-item>
+        </lightning-layout>
+        
+        <lightning-layout>
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Billing City"
+        label="Billing City"
+        style="margin-left : 10px;margin-right : 10px;"
+        required="true"
+        value={bCity}
+        disabled
+        >
+        </lightning-input>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Billing State"
+        style="margin-left : 10px;margin-right : 10px;"
+        label = "Billing State"
+        required="true"
+        value={bState}
+        disabled>
+        </lightning-input>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Shipping City"
+        label="Shipping City"
+        style="margin-left : 10px;margin-right : 10px;"
+        
+        value={sCity}>
+        </lightning-input>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        label="Shipping State"
+        value={sState}>
+        </lightning-input>
+        </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout>
+        
+          <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Billing Country"
+        style="margin-left : 10px;margin-right : 10px;"
+        label = "Billing Country"
+        required="true"
+        value={bCountry}
+        disabled>
+        </lightning-input>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Billing Zip/Postal code"
+        style="margin-left : 10px;margin-right : 10px;"
+        label = "Billing Zip/Postal code"
+        required="true"
+        value={bZip}
+        disabled>
+        </lightning-input>
+        </lightning-layout-item>
+        
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        label="Shipping Country"
+        style="margin-left : 10px;margin-right : 10px;"
+        value={sCountry}>
+        </lightning-input>
+        </lightning-layout-item>
+       
+        <lightning-layout-item flexibility="auto" padding="horizontal-medium" size="3">
+        <lightning-input
+        name="Shipping Zip/Postal code"
+        label = "Shipping Zip/Postal code"
+        value={bZip}
+        >
+        </lightning-input>
+        </lightning-layout-item>
+        </lightning-layout>
+        <br>
+       
+       
+        <lightning-layout>
+        <lightning-input
+        class="slds-p-left_xx-large slds-align_absolute-center"
+        type="checkbox"
+        label="Is Shipping address same as Billing address"
+        onclick={ChangeAddress}
+        >
+        </lightning-input>
+        </lightning-layout><br><br>
+
+<!-- 5th line layout stop -->
+
+<!-- 6th line layout start -->
+
+<!-- footer button -->
+<!-- add to list -->
+<footer>
+<div class="c-container">
+<lightning-layout pull-to-boundary="medium">
+    <lightning-layout-item flexibility="auto" padding="horizontal-small" >
+        <lightning-button 
+        
+        class="slds- button" 
+        variant="brand" 
+        style="margin-left : 200px;margin-right :50px;"
+        data-id="Green_Button" 
+        label="Add To List" 
+        onclick={handleAdd}>
+        </lightning-button>
+    </lightning-layout-item>
+    <lightning-layout-item flexibility="auto" padding="horizontal-small">
+        <lightning-button 
+        class="slds-button_outline-brand"
+        variant="" 
+        data-id="Green_Button" 
+        label="Save as draft" 
+        onclick={handle_Green_Text_Click}>
+        </lightning-button>
+    </lightning-layout-item>
+    <lightning-layout-item flexibility="auto" padding="horizontal-medium">
+        <lightning-button 
+        class="slds- button" 
+        variant="brand" 
+        data-id="Green_Button"  
+        label="Submit" 
+        onclick={handle_Green_Text_Click}>
+        </lightning-button>
+    </lightning-layout-item>
+    
+</lightning-layout>
+</div>
+</footer>
+<template if:true={showTable}>
+<lightning-datatable 
+                 class="slds-p-left_small"
+                 key-field="Id"
+                 data={data}
+                 columns={columns}
+                 onrowaction={handleAction}
+                 hide-checkbox-column="true">
+</lightning-datatable>
+</template>
+<!-- 6th line layout stop -->
+
+<div if:true={showPopup}>
+  <c-model-box onclose={handleClose}
+   productname={names}
+   ></c-model-box>
+
+</div>
+</lightning-card>
+
+
+</template>

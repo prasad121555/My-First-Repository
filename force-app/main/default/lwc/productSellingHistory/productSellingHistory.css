@@ -1,0 +1,37 @@
+table{
+    display: inline-block;
+    overflow: auto;
+}
+.mar,.apr,.may,.jun,.jul,.aug,.total,p{
+    text-align: center;
+}
+.headDiv{
+    text-align:center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+label{
+    text-align: center;
+    font-family:Segoe UI;
+    font-size:14px;
+}
+.subColor{
+    background-color: rgb(255, 193, 168);
+}
+/*td{
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+tr{
+    text-align: left;
+}
+
+.pname,.sku{
+    vertical-align: top;
+    text-align: left;
+}
+th{
+    background-color: lightgray;
+    border: 1px solid gray;
+    padding: 10px;
+} */
