@@ -12,8 +12,8 @@ export default class PostmanApp extends LightningElement {
     url;
     isBearer = false;
     method='GET';
-    jsonBody;
-    
+    jsonBody = '';
+    outerMap = new Map();
     authIn1='No Auth';
     authIn2;
     response;
@@ -24,6 +24,7 @@ export default class PostmanApp extends LightningElement {
     tempListOfHeaders=[];
     tempListOfBody=[];
     activeTab='Params';
+    statusCode='';
 
     connectedCallback() {
         
@@ -54,54 +55,21 @@ export default class PostmanApp extends LightningElement {
         if(this.activeTab === 'Params'){
             let toBeDeletedRowIndex = event.target.name;
             console.log('name==',toBeDeletedRowIndex)
-            // this.tempListOfParams = [];
-            // for(let i = 0; i < this.listOfParams.length; i++) {
-            //     let tempRecord = Object.assign({}, this.listOfParams[i]); //cloning object
-            //     if(tempRecord.index !== toBeDeletedRowIndex) {
-            //         this.tempListOfParams.push(tempRecord);
-            //     }
-            // }
-
-            // for(let i = 0; i < this.tempListOfParams.length; i++) {
-            //     this.tempListOfParams[i].index = i + 1;
-            // }
-            // this.listOfParams = this.tempListOfParams;
+            
             this.listOfParams.splice(this.listOfParams.findIndex(param => toBeDeletedRowIndex === param.index), 1);
             this.listOfParams = [...this.listOfParams];
         }
         if(this.activeTab === 'Headers'){
             let toBeDeletedRowIndex2 = event.target.name;
             console.log('name1==',toBeDeletedRowIndex2)
-            // this.tempListOfHeaders = [];
-            // for(let i = 0; i < this.listOfHeaders.length; i++) {
-            //     let tempRecord = Object.assign({}, this.listOfHeaders[i]); //cloning object
-            //     if(tempRecord.index !== toBeDeletedRowIndex2) {
-            //         this.tempListOfHeaders.push(tempRecord);
-            //     }
-            // }
-
-            // for(let i = 0; i < this.tempListOfHeaders.length; i++) {
-            //     this.tempListOfHeaders[i].index = i + 1;
-            // }
-            // this.listOfHeaders = this.tempListOfHeaders;
+            
             this.listOfHeaders.splice(this.listOfHeaders.findIndex(header => toBeDeletedRowIndex2 === header.index), 1);
             this.listOfHeaders = [...this.listOfHeaders];
         }
         if(this.activeTab === 'Body'){
             let toBeDeletedRowIndex3 = event.target.name;
             console.log('name3==',toBeDeletedRowIndex3)
-            // this.tempListOfBody = [];
-            // for(let i = 0; i < this.listOfBody.length; i++) {
-            //     let tempRecord = Object.assign({}, this.listOfBody[i]); //cloning object
-            //     if(tempRecord.index !== toBeDeletedRowIndex3) {
-            //         this.tempListOfBody.push(tempRecord);
-            //     }
-            // }
-
-            // for(let i = 0; i < this.tempListOfBody.length; i++) {
-            //     this.tempListOfBody[i].index = i + 1;
-            // }
-            // this.listOfBody = this.tempListOfBody;
+            
             this.listOfBody.splice(this.listOfBody.findIndex(body => toBeDeletedRowIndex3 === body.index), 1);
             this.listOfBody = [...this.listOfBody];
         }
@@ -112,6 +80,7 @@ export default class PostmanApp extends LightningElement {
         let fieldName = event.target.name;
         let value = event.target.value;
         if(this.activeTab === 'Params'){
+            
             for(let i = 0; i < this.listOfParams.length; i++) {
                 if(this.listOfParams[i].index === parseInt(index)) {
                     this.listOfParams[i][fieldName] = value;
@@ -212,6 +181,7 @@ export default class PostmanApp extends LightningElement {
             this.checkedLast = false;
             this.isRaw = false;
         }else if(label == 'raw'){
+            this.jsonBody = '';
             this.checkedFirst = false;
             this.checkedSecond = false;
             this.checkedThird = false;
@@ -241,19 +211,40 @@ export default class PostmanApp extends LightningElement {
 
     handleClick(event){
         const name = event.target.name;
+        
         if(name == 'send'){
-            let finalUrl;
-            if(this.paramIn1 != null && this.paramIn1 != ''){
-                finalUrl = this.url+'?'+this.paramIn1+'='+this.paramIn2;
+            console.log('inside send')
+
+            if(this.isBearer && this.authIn2 != null && this.authIn2 != ''){
+                if(this.listOfHeaders === null){
+                    this.listOfHeaders = [];
+                    this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+                    console.log('finalHeader==',JSON.stringify(this.listOfHeaders))
+                }
+                else{
+                    this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+                    console.log('finalHeader1==',JSON.stringify(this.listOfHeaders))
+                }
             }
-            else{
-                finalUrl = this.url;
+            if(this.checkedThird){
+                this.jsonBody = '';
+                console.log('inside outer if')
+                for(let i=0;i<this.listOfBody.length;i++){
+                    console.log('inside for')
+                    if(this.listOfBody[i].Key != null && this.listOfBody[i].Key != ''){
+                        console.log('inside inner if')
+                        this.jsonBody += this.listOfBody[i].Key + '=' + this.listOfBody[i].Value + '&';
+                    }
+                }
+                console.log('json==',this.jsonBody)
+                this.jsonBody = this.jsonBody.slice(0,-1);
+                console.log('json==',this.jsonBody)
             }
-            console.log('inside send>>')
-            getResponse({url:finalUrl,method:this.method,bearerToken:this.authIn2,body:this.jsonBody})
+            getResponse({url:this.url,params:this.listOfParams,headers:this.listOfHeaders,method:this.method,body:this.jsonBody})
             .then(res=>{
-                console.log('response==',res)
-                this.response = res;
+                console.log('response==',JSON.stringify(res))
+                this.response = res.resBody;
+                this.statusCode = res.statusCode;
             })
         }else if(name == 'save'){
             console.log('inside save>>')

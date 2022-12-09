@@ -149,7 +149,10 @@
             </lightning-tab>
         </lightning-tabset>
         <br/>
-        <legend>Response</legend>
-        <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
+        <div>
+            <p style="color: rgb(179, 238, 151);font-weight: bold" class="slds-float_right">{statusCode}</p>
+            <legend>Response</legend>
+            <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
+        </div>
     </div>
 </template>
