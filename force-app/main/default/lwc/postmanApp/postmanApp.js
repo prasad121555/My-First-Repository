@@ -214,16 +214,17 @@ export default class PostmanApp extends LightningElement {
         
         if(name == 'send'){
             console.log('inside send')
-
+            console.log('Trial==',this.listOfHeaders.some(e => e.Key === 'Authorization'))
             if(this.isBearer && this.authIn2 != null && this.authIn2 != ''){
-                if(this.listOfHeaders === null){
-                    this.listOfHeaders = [];
+                if(!this.listOfHeaders.some(e => e.Key === 'Authorization')){
+                    console.log('inside LH null')
                     this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
                     console.log('finalHeader==',JSON.stringify(this.listOfHeaders))
-                }
-                else{
-                    this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
-                    console.log('finalHeader1==',JSON.stringify(this.listOfHeaders))
+                }else{
+                    console.log('index==='+this.listOfHeaders.findIndex(x => x.Key ==="Authorization"))
+                    let ind = this.listOfHeaders.findIndex(x => x.Key ==="Authorization");
+                    this.listOfHeaders[ind].Value = 'Bearer '+this.authIn2;
+                    console.log('finalHeader==',JSON.stringify(this.listOfHeaders))
                 }
             }
             if(this.checkedThird){
