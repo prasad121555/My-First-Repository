@@ -130,7 +130,35 @@
         <div>
             <p style="color: rgb(179, 238, 151);font-weight: bold" class="slds-float_right">{statusCode}</p>
             <legend>Response</legend>
-            <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
+            <!-- <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea> -->
+            <lightning-tabset variant="scoped">
+                <lightning-tab label="Body">
+                    <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
+                </lightning-tab>
+                <lightning-tab label="Headers">
+                    <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid" style="width:100%;table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th scope="col" height="22">Key</th>
+                                <th scope="col" height="22">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <template for:each={responseHeaders} for:item="rec">
+                            <tr key={rec.key} class="slds-hint-parent">
+            
+                                <td>
+                                    {rec.key}
+                                </td>
+                                <td >
+                                    <div style="word-wrap: break-word;">{rec.value}</div>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </lightning-tab>
+            </lightning-tabset>
         </div>
     </div>
 </template>

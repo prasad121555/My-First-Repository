@@ -17,6 +17,7 @@ export default class PostmanApp extends LightningElement {
     authIn1='No Auth';
     authIn2;
     response;
+    responseHeaders = [];
     @track listOfParams=[];
     @track listOfHeaders=[];
     @track listOfBody=[];
@@ -269,6 +270,10 @@ export default class PostmanApp extends LightningElement {
         .then(res=>{
             this.response = res.resBody;
             this.statusCode = res.statusCode;
+            for (var key in res.resHeaders) {
+                this.responseHeaders.push({key:key,value:res.resHeaders[key]});
+            }
+            console.log('map==',this.responseHeaders)
         })
     }
 }
