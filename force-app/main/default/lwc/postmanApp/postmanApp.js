@@ -1,7 +1,14 @@
 import { LightningElement,track } from 'lwc';
 import getResponse from '@salesforce/apex/HttpRequestHandler.getResponse';
 
+const COLS = [
+    {label:'Key', fieldName:'key'},
+    {label:'Value', fieldName:'value', wrapText: true}
+]
+
 export default class PostmanApp extends LightningElement {
+    @track columns = COLS;
+    spinner = false;
     isPButtonVisible = false;
     isHButtonVisible = false;
     isBButtonVisible = false;
@@ -17,13 +24,14 @@ export default class PostmanApp extends LightningElement {
     authIn1='No Auth';
     authIn2;
     response;
-    responseHeaders = [];
+    @track responseHeaders = [];
+    isResponse = false;
     @track listOfParams=[];
     @track listOfHeaders=[];
     @track listOfBody=[];
-    tempListOfParams=[];
-    tempListOfHeaders=[];
-    tempListOfBody=[];
+    @track tempListOfParams=[];
+    @track tempListOfHeaders=[];
+    @track tempListOfBody=[];
     activeTab='Params';
     statusCode='';
     maxIndexOfParam = 1;
@@ -212,6 +220,7 @@ export default class PostmanApp extends LightningElement {
     handleClick(event){
         const name = event.target.name;
         if(name == 'send'){
+            this.spinner = true;
             this.performSend();
         }else if(name == 'save'){
             this.performSave();
@@ -219,6 +228,7 @@ export default class PostmanApp extends LightningElement {
     }
 
     performSend(){
+        this.responseHeaders = [];
         let finalUrl = this.createFinalURL();
         if(this.isBearer && this.authIn2 != null && this.authIn2 != ''){
             this.setAuthValuesInHeader();
@@ -227,6 +237,7 @@ export default class PostmanApp extends LightningElement {
             this.createFormEncodedBody();
         }
         this.makeCallout(finalUrl);
+        console.log('headers==',this.responseHeaders)
     }
 
     performSave(){
@@ -268,10 +279,12 @@ export default class PostmanApp extends LightningElement {
     makeCallout(finalUrl){
         getResponse({url:finalUrl,headers:this.listOfHeaders,method:this.method,body:this.jsonBody})
         .then(res=>{
+            this.spinner = false;
+            this.isResponse = true;
             this.response = res.resBody;
             this.statusCode = res.statusCode;
             for (var key in res.resHeaders) {
-                this.responseHeaders.push({key:key,value:res.resHeaders[key]});
+                this.responseHeaders = [...this.responseHeaders , {key:key,value:res.resHeaders[key]}];
             }
             console.log('map==',this.responseHeaders)
         })

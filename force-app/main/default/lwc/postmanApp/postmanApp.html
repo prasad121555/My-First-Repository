@@ -1,6 +1,11 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="parentDiv">
+        <div>
+            <template if:true={spinner}>
+                <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+            </template>
+        </div>
         <div class="innerDiv">
             <lightning-combobox onchange={handleUrlChange} 
                                 name="combobox" 
@@ -130,13 +135,12 @@
         <div>
             <p style="color: rgb(179, 238, 151);font-weight: bold" class="slds-float_right">{statusCode}</p>
             <legend>Response</legend>
-            <!-- <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea> -->
             <lightning-tabset variant="scoped">
                 <lightning-tab label="Body">
                     <lightning-textarea variant="label-hidden" value={response} read-only></lightning-textarea>
                 </lightning-tab>
                 <lightning-tab label="Headers">
-                    <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid" style="width:100%;table-layout: fixed;">
+                    <!-- <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid" style="width:100%;table-layout: fixed;">
                         <thead>
                             <tr>
                                 <th scope="col" height="22">Key</th>
@@ -150,13 +154,20 @@
                                 <td>
                                     {rec.key}
                                 </td>
-                                <td >
-                                    <div style="word-wrap: break-word;">{rec.value}</div>
+                                <td>
+                                    <p style="word-wrap:break-word;">{rec.value}</p>
                                 </td>
                             </tr>
                         </template>
                         </tbody>
-                    </table>
+                    </table> -->
+                    <lightning-datatable 
+                                    if:true={isResponse}    
+                                    key-field="key"
+                                    columns={columns}
+                                    data={responseHeaders}
+                                    hide-checkbox-column>
+                    </lightning-datatable>
                 </lightning-tab>
             </lightning-tabset>
         </div>
