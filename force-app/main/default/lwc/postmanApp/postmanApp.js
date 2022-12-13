@@ -2,18 +2,18 @@ import { LightningElement,track } from 'lwc';
 import getResponse from '@salesforce/apex/HttpRequestHandler.getResponse';
 
 export default class PostmanApp extends LightningElement {
-    cssClass = 'minHeight';
-    checkedFirst = true;
-    checkedSecond = false;
+    isPButtonVisible = false;
+    isHButtonVisible = false;
+    isBButtonVisible = false;
+    checkedSecond = true;
     checkedThird = false;
     checkedLast = false;
-    isVisible = false;
+    isVisible = true;
     isRaw = false;
     url;
     isBearer = false;
     method='GET';
     jsonBody = '';
-    outerMap = new Map();
     authIn1='No Auth';
     authIn2;
     response;
@@ -25,115 +25,119 @@ export default class PostmanApp extends LightningElement {
     tempListOfBody=[];
     activeTab='Params';
     statusCode='';
+    maxIndexOfParam = 1;
+    maxIndexOfHeaders = 1;
+    maxIndexOfBody = 1;
 
-    connectedCallback() {
-        
-    }
-    /**
-     * Adds a new row
-     */
-    addNewRow() {
-        if(this.activeTab === 'Params'){
-            this.createRow(this.listOfParams);
-            console.log('param size=='+this.listOfParams.length)
-        }
-        if(this.activeTab === 'Headers'){
-            console.log('param size1=='+this.listOfParams.length)
-            this.createRow(this.listOfHeaders);
-        }
-        if(this.activeTab === 'Body'){
-            console.log('param size2=='+this.listOfParams.length)
-            this.createRow(this.listOfBody);
-        }
-    }
-
-    /**
-     * Removes the selected row
-     */
+    //Removes the selected row
     removeRow(event) {
-
         if(this.activeTab === 'Params'){
             let toBeDeletedRowIndex = event.target.name;
-            console.log('name==',toBeDeletedRowIndex)
-            
             this.listOfParams.splice(this.listOfParams.findIndex(param => toBeDeletedRowIndex === param.index), 1);
             this.listOfParams = [...this.listOfParams];
+            if(this.listOfParams.length === 1){
+                this.isPButtonVisible = false;
+            }else{
+                this.isPButtonVisible = true;
+            }
+            this.maxIndexOfParam=Math.max(...this.listOfParams.map(p => p.index));
         }
         if(this.activeTab === 'Headers'){
             let toBeDeletedRowIndex2 = event.target.name;
-            console.log('name1==',toBeDeletedRowIndex2)
-            
             this.listOfHeaders.splice(this.listOfHeaders.findIndex(header => toBeDeletedRowIndex2 === header.index), 1);
             this.listOfHeaders = [...this.listOfHeaders];
+            if(this.listOfHeaders.length === 1){
+                this.isHButtonVisible = false;
+            }else{
+                this.isHButtonVisible = true;
+            }
+            this.maxIndexOfHeaders=Math.max(...this.listOfHeaders.map(h => h.index));
         }
         if(this.activeTab === 'Body'){
             let toBeDeletedRowIndex3 = event.target.name;
-            console.log('name3==',toBeDeletedRowIndex3)
-            
             this.listOfBody.splice(this.listOfBody.findIndex(body => toBeDeletedRowIndex3 === body.index), 1);
             this.listOfBody = [...this.listOfBody];
+            if(this.listOfBody.length === 1){
+                this.isBButtonVisible = false;
+            }else{
+                this.isBButtonVisible = true;
+            }
+            this.maxIndexOfBody=Math.max(...this.listOfBody.map(b => b.index));
         }
     }
 
+    //handles input value change
     handleInputChange(event) {
         let index = event.target.dataset.id;
         let fieldName = event.target.name;
         let value = event.target.value;
         if(this.activeTab === 'Params'){
-            
+            if(this.maxIndexOfParam === parseInt(index)){
+                this.createRow(this.listOfParams);
+                this.isPButtonVisible = true;
+            }
             for(let i = 0; i < this.listOfParams.length; i++) {
                 if(this.listOfParams[i].index === parseInt(index)) {
                     this.listOfParams[i][fieldName] = value;
                 }
             }
-            console.log('data==',JSON.stringify(this.listOfParams))
+            this.maxIndexOfParam=Math.max(...this.listOfParams.map(p => p.index));
         }
         if(this.activeTab === 'Headers'){
+            if(this.maxIndexOfHeaders === parseInt(index)){
+                this.createRow(this.listOfHeaders);
+                this.isHButtonVisible = true;
+            }
             for(let i = 0; i < this.listOfHeaders.length; i++) {
                 if(this.listOfHeaders[i].index === parseInt(index)) {
                     this.listOfHeaders[i][fieldName] = value;
                 }
             }
-            console.log('data1==',JSON.stringify(this.listOfHeaders))
+            this.maxIndexOfHeaders=Math.max(...this.listOfHeaders.map(h => h.index));
         }
         if(this.activeTab === 'Body'){
+            if(this.maxIndexOfBody === parseInt(index)){
+                this.createRow(this.listOfBody);
+                this.isBButtonVisible = true;
+            }
             for(let i = 0; i < this.listOfBody.length; i++) {
                 if(this.listOfBody[i].index === parseInt(index)) {
                     this.listOfBody[i][fieldName] = value;
                 }
             }
-            console.log('data2==',JSON.stringify(this.listOfBody))
+            this.maxIndexOfBody=Math.max(...this.listOfBody.map(b => b.index));
         }
     }
 
-    get options(){
+    //returns options for method combobox
+    get methodOptions(){
         return [
-                {label: 'GET',value: 'GET'},
-                {label: 'POST',value: 'POST'}
-            ]
+            {label: 'GET',value: 'GET'},
+            {label: 'POST',value: 'POST'}
+        ]
     }
 
-    get options1(){
+    //returns options for authorization type
+    get authOptions(){
         return [
-                {label: 'No Auth',value: 'No Auth'},
-                {label: 'Bearer Token',value: 'Bearer Token'}
-            ]
+            {label: 'No Auth',value: 'No Auth'},
+            {label: 'Bearer Token',value: 'Bearer Token'}
+        ]
     }
 
+    //handles url change value
     handleUrlChange(event){
         const name = event.target.name;
         if(name == 'combobox'){
-            console.log('combo value is=='+event.target.value)
             this.method = event.target.value;
         }if(name == 'inputBox'){
-            console.log('input value is=='+event.target.value)
             this.url = event.target.value;
         }
     }
 
+    //handles active tab
     handleActiveTab(event){
         this.activeTab = event.target.label;
-        console.log('active tab=='+this.activeTab);
         if(this.activeTab === 'Params' && this.listOfParams.length == 0){
             this.createRow(this.listOfParams);
         }
@@ -145,6 +149,7 @@ export default class PostmanApp extends LightningElement {
         }
     }
 
+    //creates an empty row
     createRow(params) {
         let paramsObject = {};
         if(params.length > 0) {
@@ -157,40 +162,32 @@ export default class PostmanApp extends LightningElement {
         params.push(paramsObject);
     }
 
+    //handles checkbox values
     handleCheckboxChange(event){
         const label = event.target.label;
-        if(label == 'none'){
-            this.checkedFirst = true;
-            this.isVisible = false;
-            this.checkedSecond = false;
-            this.checkedThird = false;
-            this.checkedLast = false;
-            this.isRaw = false;
-        }else if(label == 'form-data'){
-            this.checkedFirst = false;
-            this.checkedSecond = true;
-            this.isVisible = event.target.checked;
+        if(label == 'form-data'){
+            this.checkedSecond = event.target.checked;
+            this.isVisible = this.checkedSecond;
             this.checkedThird = false;
             this.checkedLast = false;
             this.isRaw = false;
         }else if(label == 'x-www-form-urlencoded'){
-            this.checkedFirst = false;
             this.checkedSecond = false;
-            this.checkedThird = true;
-            this.isVisible = event.target.checked;
+            this.checkedThird = event.target.checked;
+            this.isVisible = this.checkedThird;
             this.checkedLast = false;
             this.isRaw = false;
         }else if(label == 'raw'){
             this.jsonBody = '';
-            this.checkedFirst = false;
             this.checkedSecond = false;
             this.checkedThird = false;
             this.isVisible = false;
-            this.checkedLast = true;
-            this.isRaw = event.target.checked;
+            this.checkedLast = event.target.checked;
+            this.isRaw = this.checkedLast;
         }
     }
 
+    //handles authorization combobox
     handleChange(event){
         const name = event.target.name;
         if(name == 'authIn1'){
@@ -205,50 +202,73 @@ export default class PostmanApp extends LightningElement {
         }
     }
 
+    //handles raw body textarea
     handleJsonBody(event){
         this.jsonBody = event.target.value;
     }
 
+    //handles button click
     handleClick(event){
         const name = event.target.name;
-        
         if(name == 'send'){
-            console.log('inside send')
-            console.log('Trial==',this.listOfHeaders.some(e => e.Key === 'Authorization'))
-            if(this.isBearer && this.authIn2 != null && this.authIn2 != ''){
-                if(!this.listOfHeaders.some(e => e.Key === 'Authorization')){
-                    console.log('inside LH null')
-                    this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
-                    console.log('finalHeader==',JSON.stringify(this.listOfHeaders))
-                }else{
-                    console.log('index==='+this.listOfHeaders.findIndex(x => x.Key ==="Authorization"))
-                    let ind = this.listOfHeaders.findIndex(x => x.Key ==="Authorization");
-                    this.listOfHeaders[ind].Value = 'Bearer '+this.authIn2;
-                    console.log('finalHeader==',JSON.stringify(this.listOfHeaders))
-                }
-            }
-            if(this.checkedThird){
-                this.jsonBody = '';
-                console.log('inside outer if')
-                for(let i=0;i<this.listOfBody.length;i++){
-                    console.log('inside for')
-                    if(this.listOfBody[i].Key != null && this.listOfBody[i].Key != ''){
-                        console.log('inside inner if')
-                        this.jsonBody += this.listOfBody[i].Key + '=' + this.listOfBody[i].Value + '&';
-                    }
-                }
-                console.log('json==',this.jsonBody)
-                this.jsonBody = this.jsonBody.slice(0,-1);
-                console.log('json==',this.jsonBody)
-            }
-            getResponse({url:this.url,params:this.listOfParams,headers:this.listOfHeaders,method:this.method,body:this.jsonBody})
-            .then(res=>{
-                console.log('response==',JSON.stringify(res))
-                this.response = res.resBody;
-                this.statusCode = res.statusCode;
-            })
+            this.performSend();
         }else if(name == 'save'){
-            console.log('inside save>>')
+            this.performSave();
         }
+    }
+
+    performSend(){
+        let finalUrl = this.createFinalURL();
+        if(this.isBearer && this.authIn2 != null && this.authIn2 != ''){
+            this.setAuthValuesInHeader();
+        }
+        if(this.checkedThird){
+            this.createFormEncodedBody();
+        }
+        this.makeCallout(finalUrl);
+    }
+
+    performSave(){
+
+    }
+
+    createFinalURL(){
+        let tempUrl = '';
+        if(!this.url.endsWith('?')){
+            tempUrl=this.url+'?';
+        }
+        for(let i=0;i<this.listOfParams.length;i++){
+            if(this.listOfParams[i].Key != null && this.listOfParams[i].Key != ''){
+                tempUrl += this.listOfParams[i].Key + '=' + this.listOfParams[i].Value + '&';
+            }
+        }
+        return tempUrl = (tempUrl.slice(0,-1)).replace(' ','%20');
+    }
+
+    createFormEncodedBody(){
+        this.jsonBody = '';
+        for(let i=0;i<this.listOfBody.length;i++){
+            if(this.listOfBody[i].Key != null && this.listOfBody[i].Key != ''){
+                this.jsonBody += this.listOfBody[i].Key + '=' + this.listOfBody[i].Value + '&';
+            }
+        }
+        this.jsonBody = this.jsonBody.slice(0,-1);
+    }
+
+    setAuthValuesInHeader(){
+        if(!this.listOfHeaders.some(e => e.Key === 'Authorization')){
+            this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+        }else{
+            let ind = this.listOfHeaders.findIndex(x => x.Key ==="Authorization");
+            this.listOfHeaders[ind].Value = 'Bearer '+this.authIn2;
+        }
+    }
+
+    makeCallout(finalUrl){
+        getResponse({url:finalUrl,headers:this.listOfHeaders,method:this.method,body:this.jsonBody})
+        .then(res=>{
+            this.response = res.resBody;
+            this.statusCode = res.statusCode;
+        })
     }
 }

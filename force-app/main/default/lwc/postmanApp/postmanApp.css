@@ -28,12 +28,6 @@
 .save{
     flex: 4;
 }
-.minHeight{
-    height: fit-content;
-}
-.maxHeight{
-    height: 300px;
-}
 .displayInOneLine{
     display: flex;
 }
