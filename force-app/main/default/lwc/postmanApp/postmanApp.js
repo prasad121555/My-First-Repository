@@ -9,6 +9,7 @@ const COLS = [
 export default class PostmanApp extends LightningElement {
     @track columns = COLS;
     spinner = false;
+    isSend = true;
     isPButtonVisible = false;
     isHButtonVisible = false;
     isBButtonVisible = false;
@@ -37,6 +38,19 @@ export default class PostmanApp extends LightningElement {
     maxIndexOfParam = 1;
     maxIndexOfHeaders = 1;
     maxIndexOfBody = 1;
+
+    connectedCallback(){
+        if(this.listOfParams.length == 0){
+            this.createRow(this.listOfParams);
+        }
+        if(this.listOfHeaders.length == 0){
+            this.createRow(this.listOfHeaders);
+            console.log('header length='+this.listOfHeaders.length)
+        }
+        if(this.listOfBody.length == 0){
+            this.createRow(this.listOfBody);
+        }
+    }
 
     //Removes the selected row
     removeRow(event) {
@@ -93,6 +107,8 @@ export default class PostmanApp extends LightningElement {
             this.maxIndexOfParam=Math.max(...this.listOfParams.map(p => p.index));
         }
         if(this.activeTab === 'Headers'){
+            console.log('max=='+this.maxIndexOfHeaders)//1
+            console.log('current=='+index)//2
             if(this.maxIndexOfHeaders === parseInt(index)){
                 this.createRow(this.listOfHeaders);
                 this.isHButtonVisible = true;
@@ -141,21 +157,18 @@ export default class PostmanApp extends LightningElement {
             this.method = event.target.value;
         }if(name == 'inputBox'){
             this.url = event.target.value;
+            if(this.url != null && this.url != ''){
+                this.isSend = false;
+            }
+            else{
+                this.isSend = true;
+            }
         }
     }
 
     //handles active tab
     handleActiveTab(event){
         this.activeTab = event.target.label;
-        if(this.activeTab === 'Params' && this.listOfParams.length == 0){
-            this.createRow(this.listOfParams);
-        }
-        if(this.activeTab === 'Headers' && this.listOfHeaders.length == 0){
-            this.createRow(this.listOfHeaders);
-        }
-        if(this.activeTab === 'Body' && this.listOfBody.length == 0){
-            this.createRow(this.listOfBody);
-        }
     }
 
     //creates an empty row
@@ -269,11 +282,35 @@ export default class PostmanApp extends LightningElement {
 
     setAuthValuesInHeader(){
         if(!this.listOfHeaders.some(e => e.Key === 'Authorization')){
-            this.listOfHeaders.push({index:this.listOfHeaders.length+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+            // if(this.listOfHeaders.length === 0){
+            //     this.listOfHeaders.push({index:1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+            // }
+            // else{
+            //     console.log('header length1=',this.listOfHeaders)
+            //     this.listOfHeaders[0].index = this.listOfHeaders.length;
+            //     this.listOfHeaders[0].Key = 'Authorization';
+            //     this.listOfHeaders[0].Value = 'Bearer '+this.authIn2;
+            // }
+            if((this.listOfHeaders[this.listOfHeaders.length - 1].Key=='' || this.listOfHeaders[this.listOfHeaders.length - 1].Key==null) || (this.listOfHeaders[this.listOfHeaders.length - 1].Value=='' || this.listOfHeaders[this.listOfHeaders.length - 1].Value==null)){
+                this.listOfHeaders[this.listOfHeaders.length - 1].index = this.listOfHeaders[this.listOfHeaders.length - 1].index+1;
+                this.listOfHeaders[this.listOfHeaders.length - 1].Key = 'Authorization';
+                this.listOfHeaders[this.listOfHeaders.length - 1].Value = 'Bearer '+this.authIn2;
+                console.log('max2=='+this.maxIndexOfHeaders)
+            }
+            else{
+                this.listOfHeaders.push({index:this.listOfHeaders[this.listOfHeaders.length - 1].index+1,Key:'Authorization',Value:'Bearer '+this.authIn2})
+            }
+            this.createRow(this.listOfHeaders);
+            this.isHButtonVisible = true;
         }else{
             let ind = this.listOfHeaders.findIndex(x => x.Key ==="Authorization");
             this.listOfHeaders[ind].Value = 'Bearer '+this.authIn2;
+            if((this.listOfHeaders[this.listOfHeaders.length - 1].Key!='' && this.listOfHeaders[this.listOfHeaders.length - 1].Key!=null) || (this.listOfHeaders[this.listOfHeaders.length - 1].Value!='' && this.listOfHeaders[this.listOfHeaders.length - 1].Value!=null)){
+                this.createRow(this.listOfHeaders);
+                this.isHButtonVisible = true;
+            }
         }
+        this.maxIndexOfHeaders=Math.max(...this.listOfHeaders.map(h => h.index));
     }
 
     makeCallout(finalUrl){

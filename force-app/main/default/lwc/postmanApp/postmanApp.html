@@ -1,12 +1,12 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="parentDiv">
-        <div>
-            <template if:true={spinner}>
-                <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
-            </template>
-        </div>
         <div class="innerDiv">
+            <div>
+                <template if:true={spinner}>
+                    <lightning-spinner alternative-text="Loading" variant="brand" size="medium"></lightning-spinner>
+                </template>
+            </div>
             <lightning-combobox onchange={handleUrlChange} 
                                 name="combobox" 
                                 class="combo"
@@ -15,7 +15,7 @@
                                 variant="label-hidden">
             </lightning-combobox>
             <lightning-input variant="label-hidden" onchange={handleUrlChange} value={url} name="inputBox" placeholder="Enter URL" class="input"></lightning-input>
-            <lightning-button variant="brand" label="Send" class="send" onclick={handleClick} name="send"></lightning-button>
+            <lightning-button variant="brand" label="Send" class="send" onclick={handleClick} name="send" disabled={isSend}></lightning-button>
             <lightning-button variant="brand" label="Save" class="save" onclick={handleClick} name="save"></lightning-button>
         </div>
         <lightning-tabset variant="scoped">
